@@ -86,6 +86,13 @@
             flavor = "tap-preferred";
             tapping-term-ms = <200>;
         };
+
+        HYPER_ESCAPE: HYPER_ESCAPE {
+            compatible = "zmk,behavior-tap-dance";
+            label = "HYPER_ESCAPE";
+            #binding-cells = <0>;
+            bindings = <&mt LS(LA(LC(LEFT_GUI))) ESCAPE>, <&kp LEFT_CONTROL>;
+        };
     };
 
     keymap {
@@ -99,10 +106,10 @@
             //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
 
             bindings = <
-&kp TAB                  &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y      &kp U  &kp I      &kp O    &kp P     &kp BACKSPACE
-&mt LEFT_CONTROL ESCAPE  &kp A  &kp S  &kp D     &kp F  &kp G        &kp H      &kp J  &kp K      &kp L    &kp SEMI  &mt LS(LG(LA(LEFT_CONTROL))) SQT
-&kp LEFT_SHIFT           &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N      &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESCAPE
-                                       &kp LGUI  &mo 1  &kp ENTER    &kp SPACE  &mo 2  &kp RALT
+&kp TAB         &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y      &kp U  &kp I      &kp O    &kp P     &kp BACKSPACE
+&HYPER_ESCAPE   &kp A  &kp S  &kp D     &kp F  &kp G        &kp H      &kp J  &kp K      &kp L    &kp SEMI  &trans
+&kp LEFT_SHIFT  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N      &kp M  &kp COMMA  &kp DOT  &kp FSLH  &td0
+                              &kp LGUI  &mo 1  &kp ENTER    &kp SPACE  &mo 2  &kp RALT
             >;
 
             label = "QWERTY";
@@ -123,7 +130,7 @@
             bindings = <
 &trans  &trans     &trans        &trans        &trans          &trans    &kp LS(LG(Z))      &kp LG(V)       &kp LG(C)   &kp LG(X)  &kp LG(Z)  &trans
 &trans  &kp LCTRL  &kp LEFT_ALT  &kp LEFT_GUI  &kp LEFT_SHIFT  &trans    &kp LEFT           &kp DOWN        &kp UP      &kp RIGHT  &trans     &trans
-&trans  &trans     &trans        &trans        &trans          &trans    &kp LA(LG(SPACE))  &kp K_PREVIOUS  &kp C_NEXT  &trans     &trans     &trans
+&trans  &trans     &trans        &trans        &trans          &trans    &kp LA(LG(SPACE))  &kp C_PREVIOUS  &kp C_NEXT  &trans     &trans     &trans
                                  &trans        &tog 3          &trans    &trans             &trans          &trans
             >;
 
@@ -133,8 +140,8 @@
         adjust {
             bindings = <
 &sys_reset  &bootloader  &kp C_AL_SCREENSAVER  &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &rgb_ug RGB_TOG    &rgb_ug RGB_BRI  &kp F7  &kp F8         &kp F9  &kp F10  &bt BT_CLR_ALL
-&to 0       &trans       &kp C_MUTE            &kp C_VOL_DN          &kp C_VOL_UP          &rgb_ug RGB_EFF    &rgb_ug RGB_BRD  &kp F4  &kp F5         &kp F6  &kp F11  &kp CAPSLOCK
-&trans      &trans       &trans                &trans                &trans                &trans             &rgb_ug RGB_HUI  &kp F1  &kp F2         &kp F3  &kp F12  &trans
+&to 0       &trans       &kp C_MUTE            &kp C_VOL_DN          &kp C_VOL_UP          &rgb_ug RGB_EFF    &rgb_ug RGB_BRD  &kp F4  &kp F5         &kp F6  &kp F11  &td0
+&trans      &trans       &trans                &bt BT_CLR            &bt BT_SEL 0          &bt BT_SEL 4       &rgb_ug RGB_HUI  &kp F1  &kp F2         &kp F3  &kp F12  &trans
                                                &kp LEFT_GUI          &trans                &kp BACKSPACE      &kp SPACE        &trans  &kp RIGHT_ALT
             >;
 
