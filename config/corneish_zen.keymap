@@ -10,6 +10,7 @@
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/rgb.h>
 
+
 / {
     chosen {
         zmk,matrix_transform = &default_transform;
@@ -19,79 +20,300 @@
 };
 
 / {
+    combos {
+        compatible = "zmk,combos";
+
+        // 括号和符号组合键
+        combo_grave {
+            bindings = <&kp GRAVE>;
+            key-positions = <15 16>;
+            layers = <0>;
+        };
+
+        combo_brace_left {
+            bindings = <&kp LEFT_BRACKET>;
+            key-positions = <19 20>;
+            layers = <0>;
+        };
+
+        combo_brace_right {
+            bindings = <&kp RIGHT_BRACKET>;
+            key-positions = <20 21>;
+            layers = <0>;
+        };
+
+        combo_left_bracket {
+            bindings = <&kp LEFT_PARENTHESIS>;
+            key-positions = <7 8>;
+            layers = <0>;
+        };
+
+        combo_right_bracket {
+            bindings = <&kp RIGHT_PARENTHESIS>;
+            key-positions = <8 9>;
+            layers = <0>;
+        };
+
+        combo_lt {
+            bindings = <&kp LT>;
+            key-positions = <31 32>;
+            layers = <0>;
+        };
+
+        combo_gt {
+            bindings = <&kp GT>;
+            key-positions = <32 33>;
+            layers = <0>;
+        };
+
+        // 数学符号组合键
+        combo_equal {
+            bindings = <&kp EQUAL>;
+            key-positions = <30 31>;
+            layers = <0>;
+        };
+
+        combo_plus {
+            bindings = <&kp PLUS>;
+            key-positions = <6 7>;
+            layers = <0>;
+        };
+
+        combo_minus {
+            bindings = <&kp MINUS>;
+            key-positions = <18 19>;
+            layers = <0>;
+        };
+
+        // 其他功能组合键
+        bootloader {
+            bindings = <&bootloader>;
+            key-positions = <25 6 3 34 30>;
+            layers = <1>;
+        };
+
+        back_slash {
+            bindings = <&kp BACKSLASH>;
+            key-positions = <21 22>;
+            layers = <0>;
+        };
+
+        // 新增组合键
+        combo_esc {
+            bindings = <&kp ESCAPE>;
+            key-positions = <0 1>;
+            layers = <0>;
+        };
+
+        combo_tab {
+            bindings = <&kp TAB>;
+            key-positions = <1 2>;
+            layers = <0>;
+        };
+
+        combo_colon {
+            bindings = <&kp COLON>;
+            key-positions = <21 22>;
+            layers = <0>;
+        };
+
+        // 常用功能切换
+        combo_media_layer {
+            bindings = <&mo 4>;
+            key-positions = <37 40>;
+            layers = <0>;
+        };
+    };
+
     behaviors {
         td0: td0 {
             compatible = "zmk,behavior-tap-dance";
             label = "TD0";
             #binding-cells = <0>;
-            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
+            bindings = <&kp LEFT_SHIFT>, <&kp CAPSLOCK>;
+        };
+
+        mtt: mtt {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MTT";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+        };
+
+        ltt: ltt {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LTT";
+            bindings = <&mo>, <&kp>;
+
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+        };
+
+        HYPER_ESCAPE: HYPER_ESCAPE {
+            compatible = "zmk,behavior-tap-dance";
+            label = "HYPER_ESCAPE";
+            #binding-cells = <0>;
+            bindings = <&mt LS(LA(LC(LEFT_GUI))) ESCAPE>, <&kp LEFT_CONTROL>;
+        };
+
+        // 新增：智能Shift
+        smart_shift: smart_shift {
+            compatible = "zmk,behavior-mod-morph";
+            label = "SMART_SHIFT";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_SHIFT>, <&caps_word>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        // 新增：双击删除整词
+        bspc_del_word: backspace_delete_word {
+            compatible = "zmk,behavior-tap-dance";
+            label = "BACKSPACE_DELETE_WORD";
+            #binding-cells = <0>;
+            bindings = <&kp BACKSPACE>, <&kp LC(BACKSPACE)>;
+            tapping-term-ms = <200>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-
-
-        default_layer {
-            display-name = "QWERTY";
-
-            // --------------------------------------------------------------------------------
-            // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
-            // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   | 
-            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-            //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
+        base {
+            /*
+            // corne 主层物理布局 - 优化版
+            // ┌────┬────┬────┬────┬────┬────┐      ┌────┬────┬────┬────┬────┬────┐
+            // │    │ Q  │ W  │ E  │ R  │ T  │      │ Y  │ U  │ I  │ O  │ P  │BSP/DEL│
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │ESC/│ A  │ S  │ D  │ F  │ G  │      │ H  │ J  │ K  │ L  │ ;  │  '   │
+            // │HYPR├────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │SHFT│ Z  │ X  │ C  │ V  │ B  │      │ N  │ M  │ ,  │ .  │ /  │SHFT  │
+            // └────┴────┴────┴────┴────┴────┘      └────┴────┴────┴────┴────┴────┘
+            //         │NAV │SPC │CTL │      │ENT │SYM │GUI │
+            //         └────┴────┴────┘      └────┴────┴────┘
+            */
 
             bindings = <
-&kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T          &kp Y        &kp U  &kp I      &kp O    &kp P     &kp BSPC
-&kp LCTRL  &kp A  &kp S  &kp D     &kp F  &kp G          &kp H        &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-&td0       &kp Z  &kp X  &kp C     &kp V  &kp B          &kp N        &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                         &kp LGUI  &mo 1  &lt 3 SPACE    &lt 3 ENTER  &mo 2  &kp RALT
+&none             &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y      &kp U  &kp I      &kp O    &kp P     &bspc_del_word
+&HYPER_ESCAPE     &kp A  &kp S  &kp D     &kp F  &kp G        &kp H      &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
+&smart_shift      &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N      &kp M  &kp COMMA  &kp DOT  &kp SLASH &mt RIGHT_SHIFT EQUAL
+                                &lt 3 TAB &kp SPACE &kp LCTRL &kp ENTER  &mo 1  &mt LEFT_GUI LEFT_ALT
             >;
+
+            label = "QWERTY";
         };
 
-        lower_layer {
-            display-name = "NUMBER";
-
-            // -----------------------------------------------------------------------------------------
-            // |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
-            // | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-            // | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-            //                    | GUI |     | SPC |   | ENT |     | ALT |
+        sym {
+            /*
+            // corne 符号层 - 优化版
+            // ┌────┬────┬────┬────┬────┬────┐      ┌────┬────┬────┬────┬────┬────┐
+            // │ `  │  ! │  @ │  # │  $ │  % │      │  ^ │  & │  * │  ( │  ) │  ~  │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │    │  1 │  2 │  3 │  4 │  5 │      │  6 │  7 │  8 │  9 │  0 │     │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │    │ {  │  } │  [ │  ] │    │      │  + │  - │  = │  \ │  | │     │
+            //         │   │   │   │      │   │   │    │
+            */
 
             bindings = <
-&trans  &kp N1           &kp N2          &kp N3        &kp N4        &kp N5             &kp N6           &kp N7           &kp N8           &kp N9           &kp N0    &kp BSPC
-&trans  &bt BT_CLR_ALL   &bt BT_SEL 0    &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3       &kp LEFT         &kp DOWN         &kp UP           &kp RIGHT        &kp HOME  &kp PG_UP
-&trans  &rgb_ug RGB_OFF  &rgb_ug RGB_ON  &trans        &trans        &rgb_ug RGB_EFF    &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &kp END   &kp PG_DN
-                                         &trans        &trans        &trans             &kp INS          &kp DEL          &trans
+&kp GRAVE  &kp EXCL      &kp AT        &kp HASH      &kp DOLLAR    &kp PERCENT    &kp CARET  &kp AMPS   &kp STAR      &kp LPAR      &kp RPAR  &kp TILDE
+&trans     &kp N1        &kp N2        &kp N3        &kp N4        &kp N5         &kp N6     &kp N7     &kp N8        &kp N9        &kp N0    &trans
+&trans     &kp LBRC      &kp RBRC      &kp LBKT      &kp RBKT      &trans         &kp PLUS   &kp MINUS  &kp EQUAL     &kp BSLH      &kp PIPE  &trans
+                                       &to 0         &trans        &trans         &trans     &trans     &trans
             >;
+
+            label = "SYMBOL";
         };
 
-        raise_layer {
-            display-name = "SYMBOL";
-
-            // -----------------------------------------------------------------------------------------
-            // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
-            // | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-            // | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-            //                    | GUI |     | SPC |   | ENT |     | ALT |
+        nav {
+            /*
+            // corne 导航层（NAV）- 优化版
+            // ┌────┬────┬────┬────┬────┬────┐      ┌────┬────┬────┬────┬────┬────┐
+            // │    │Undo│Cut │Copy│Pste│    │      │Home│PgDn│PgUp│End │    │Del │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │    │Ctl │Alt │GUI │Shft│    │      │ ←  │ ↓  │ ↑  │ →  │    │    │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │    │Redo│Slct│Find│Rplc│    │      │BkSp│Del │Tab │Ent │Caps│    │
+            //         │   │   │   │      │   │to2│    │
+            */
 
             bindings = <
-&trans  &kp EXCL      &kp AT        &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR  &kp RPAR  &kp BSPC
-&trans  &none         &none         &none     &none     &none        &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT  &kp BSLH  &kp GRAVE
-&trans  &out OUT_USB  &out OUT_BLE  &none     &none     &none        &kp UNDER  &kp PLUS   &kp LBRC   &kp RBRC  &kp PIPE  &kp TILDE
-                                    &trans    &trans    &kp SPACE    &kp RET    &trans     &trans
+&trans  &kp LG(Z)    &kp LG(X)   &kp LG(C)     &kp LG(V)      &trans    &kp HOME    &kp PAGE_DOWN  &kp PAGE_UP  &kp END     &trans        &kp DEL
+&trans  &kp LCTRL    &kp LALT    &kp LGUI      &kp LSHFT      &trans    &kp LEFT    &kp DOWN       &kp UP       &kp RIGHT   &trans        &trans
+&trans  &kp LG(LS(Z))&kp LG(A)   &kp LG(F)     &kp LG(H)      &trans    &kp BSPC    &kp DEL        &kp TAB      &kp ENTER   &kp CAPSLOCK  &trans
+                                 &trans        &trans         &trans    &trans      &to 2          &trans
             >;
+
+            label = "NAVI";
         };
 
-        layer_3 {
-            display-name = "Fn";
+        num {
+            /*
+            // corne 数字层 - 优化版
+            // ┌────┬────┬────┬────┬────┬────┐      ┌────┬────┬────┬────┬────┬────┐
+            // │ F1 │ F2 │ F3 │ F4 │ F5 │ F6 │      │  / │  7 │  8 │  9 │  - │    │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │ F7 │ F8 │ F9 │F10 │F11 │F12 │      │  * │  4 │  5 │  6 │  + │    │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │    │    │    │    │    │    │      │  = │  1 │  2 │  3 │  . │    │
+            //         │to0│   │   │      │   │   │  0 │
+            */
+
             bindings = <
-&trans  &kp F1      &kp F2  &kp F3  &kp F4      &kp F5         &kp F6       &kp F7  &kp F8  &kp F9  &kp F10          &kp F11
-&trans  &bt BT_CLR  &trans  &trans  &sys_reset  &bootloader    &bootloader  &trans  &trans  &trans  &kp PRINTSCREEN  &kp F12
-&trans  &trans      &trans  &trans  &trans      &trans         &trans       &trans  &trans  &trans  &kp SCROLLLOCK   &kp PAUSE_BREAK
-                            &trans  &trans      &trans         &trans       &trans  &trans
+&kp F1     &kp F2        &kp F3        &kp F4        &kp F5        &kp F6         &kp SLASH   &kp N7        &kp N8        &kp N9        &kp MINUS   &trans
+&kp F7     &kp F8        &kp F9        &kp F10       &kp F11       &kp F12        &kp STAR    &kp N4        &kp N5        &kp N6        &kp PLUS    &trans
+&trans     &trans        &trans        &trans        &trans        &trans         &kp EQUAL   &kp N1        &kp N2        &kp N3        &kp DOT     &trans
+                                       &to 0         &trans        &trans         &trans      &trans        &kp N0
             >;
+
+            label = "NUMBER";
+        };
+
+        media {
+            /*
+            // corne 媒体层 - 新增
+            // ┌────┬────┬────┬────┬────┬────┐      ┌────┬────┬────┬────┬────┬────┐
+            // │RST │BTL │    │BRI-│BRI+│    │      │    │    │    │    │    │    │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │BT_C│BT0 │BT1 │BT2 │BT3 │BT4 │      │    │Vol-│Vol+│Mute│    │    │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │    │RGBT│RGBE│RGBI│RGBD│RGBH│      │Prev│Play│Next│    │    │    │
+            //         │   │   │   │      │   │   │ADJ │
+            */
+
+            bindings = <
+&sys_reset    &bootloader   &none           &kp C_BRI_DN        &kp C_BRI_UP        &none           &none         &none         &none           &none           &none         &none
+&bt BT_CLR    &bt BT_SEL 0  &bt BT_SEL 1    &bt BT_SEL 2        &bt BT_SEL 3        &bt BT_SEL 4    &none         &kp C_VOL_DN  &kp C_VOL_UP    &kp C_MUTE      &none         &none
+&none         &rgb_ug RGB_TOG &rgb_ug RGB_EFF &rgb_ug RGB_BRI   &rgb_ug RGB_BRD     &rgb_ug RGB_HUI &kp C_PREV    &kp C_PP      &kp C_NEXT      &none           &none         &none
+                                            &trans              &trans              &trans          &trans        &trans        &mo 5
+            >;
+
+            label = "MEDIA";
+        };
+
+        adjust {
+            /*
+            // corne 调整层 - 保留系统设置
+            // ┌────┬────┬────┬────┬────┬────┐      ┌────┬────┬────┬────┬────┬────┐
+            // │RST │    │    │    │    │    │      │    │    │    │    │    │    │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │to0 │    │    │    │    │    │      │    │    │    │    │    │    │
+            // ├────┼────┼────┼────┼────┼────┤      ├────┼────┼────┼────┼────┼────┤
+            // │    │    │    │    │    │    │      │    │    │    │    │    │    │
+            //         │   │   │   │      │   │   │    │
+            */
+
+            bindings = <
+&sys_reset  &none         &none               &none                &none                 &none             &none           &none   &none          &none  &none  &none
+&to 0       &none         &none               &none                &none                 &none             &none           &none   &none          &none  &none  &none
+&none       &none         &none               &none                &none                 &none             &none           &none   &none          &none  &none  &none
+                                             &none                &none                 &none             &none           &none   &none
+            >;
+
+            label = "ADJUST";
         };
     };
 };
