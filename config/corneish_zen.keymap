@@ -7,9 +7,7 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/rgb.h>
-
 
 / {
     chosen {
@@ -24,6 +22,7 @@
         compatible = "zmk,combos";
 
         // 括号和符号组合键
+
         combo_grave {
             bindings = <&kp GRAVE>;
             key-positions = <15 16>;
@@ -67,6 +66,7 @@
         };
 
         // 数学符号组合键
+
         combo_equal {
             bindings = <&kp EQUAL>;
             key-positions = <30 31>;
@@ -86,6 +86,7 @@
         };
 
         // 其他功能组合键
+
         bootloader {
             bindings = <&bootloader>;
             key-positions = <25 6 3 34 30>;
@@ -99,6 +100,7 @@
         };
 
         // 新增组合键
+
         combo_esc {
             bindings = <&kp ESCAPE>;
             key-positions = <0 1>;
@@ -118,6 +120,7 @@
         };
 
         // 常用功能切换
+
         combo_media_layer {
             bindings = <&mo 4>;
             key-positions = <37 40>;
@@ -161,20 +164,24 @@
         };
 
         // 新增：智能Shift
+
         smart_shift: smart_shift {
             compatible = "zmk,behavior-mod-morph";
             label = "SMART_SHIFT";
             #binding-cells = <0>;
             bindings = <&kp LEFT_SHIFT>, <&caps_word>;
+
             mods = <(MOD_LSFT)>;
         };
 
         // 新增：双击删除整词
+
         bspc_del_word: backspace_delete_word {
             compatible = "zmk,behavior-tap-dance";
             label = "BACKSPACE_DELETE_WORD";
             #binding-cells = <0>;
             bindings = <&kp BACKSPACE>, <&kp LC(BACKSPACE)>;
+
             tapping-term-ms = <200>;
         };
     };
@@ -197,10 +204,10 @@
             */
 
             bindings = <
-&none             &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y      &kp U  &kp I      &kp O    &kp P     &bspc_del_word
-&HYPER_ESCAPE     &kp A  &kp S  &kp D     &kp F  &kp G        &kp H      &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-&smart_shift      &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N      &kp M  &kp COMMA  &kp DOT  &kp SLASH &mt RIGHT_SHIFT EQUAL
-                                &lt 3 TAB &kp SPACE &kp LCTRL &kp ENTER  &mo 1  &mt LEFT_GUI LEFT_ALT
+&mt LEFT_CONTROL TAB  &kp Q  &kp W  &kp E             &kp R      &kp T        &kp Y      &kp U  &kp I                  &kp O    &kp P      &bspc_del_word
+&HYPER_ESCAPE         &kp A  &kp S  &kp D             &kp F      &kp G        &kp H      &kp J  &kp K                  &kp L    &kp SEMI   &kp SQT
+&smart_shift          &kp Z  &kp X  &kp C             &kp V      &kp B        &kp N      &kp M  &kp COMMA              &kp DOT  &kp SLASH  &mt RIGHT_SHIFT EQUAL
+                                    &kp LEFT_COMMAND  &lt 3 TAB  &kp SPACE    &kp ENTER  &mo 1  &mt LEFT_GUI LEFT_ALT
             >;
 
             label = "QWERTY";
@@ -219,10 +226,10 @@
             */
 
             bindings = <
-&kp GRAVE  &kp EXCL      &kp AT        &kp HASH      &kp DOLLAR    &kp PERCENT    &kp CARET  &kp AMPS   &kp STAR      &kp LPAR      &kp RPAR  &kp TILDE
-&trans     &kp N1        &kp N2        &kp N3        &kp N4        &kp N5         &kp N6     &kp N7     &kp N8        &kp N9        &kp N0    &trans
-&trans     &kp LBRC      &kp RBRC      &kp LBKT      &kp RBKT      &trans         &kp PLUS   &kp MINUS  &kp EQUAL     &kp BSLH      &kp PIPE  &trans
-                                       &to 0         &trans        &trans         &trans     &trans     &trans
+&kp GRAVE  &kp EXCL  &kp AT    &kp HASH  &kp DOLLAR  &kp PERCENT    &kp CARET  &kp AMPS   &kp STAR   &kp LPAR  &kp RPAR  &kp TILDE
+&trans     &kp N1    &kp N2    &kp N3    &kp N4      &kp N5         &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &trans
+&trans     &kp LBRC  &kp RBRC  &kp LBKT  &kp RBKT    &trans         &kp PLUS   &kp MINUS  &kp EQUAL  &kp BSLH  &kp PIPE  &trans
+                               &to 0     &trans      &trans         &trans     &trans     &trans
             >;
 
             label = "SYMBOL";
@@ -241,10 +248,10 @@
             */
 
             bindings = <
-&trans  &kp LG(Z)    &kp LG(X)   &kp LG(C)     &kp LG(V)      &trans    &kp HOME    &kp PAGE_DOWN  &kp PAGE_UP  &kp END     &trans        &kp DEL
-&trans  &kp LCTRL    &kp LALT    &kp LGUI      &kp LSHFT      &trans    &kp LEFT    &kp DOWN       &kp UP       &kp RIGHT   &trans        &trans
-&trans  &kp LG(LS(Z))&kp LG(A)   &kp LG(F)     &kp LG(H)      &trans    &kp BSPC    &kp DEL        &kp TAB      &kp ENTER   &kp CAPSLOCK  &trans
-                                 &trans        &trans         &trans    &trans      &to 2          &trans
+&trans  &kp LG(Z)      &kp LG(X)  &kp LG(C)  &kp LG(V)  &trans    &kp HOME  &kp PAGE_DOWN  &kp PAGE_UP  &kp END    &trans        &kp DEL
+&trans  &kp LCTRL      &kp LALT   &kp LGUI   &kp LSHFT  &trans    &kp LEFT  &kp DOWN       &kp UP       &kp RIGHT  &trans        &trans
+&trans  &kp LG(LS(Z))  &kp LG(A)  &kp LG(F)  &kp LG(H)  &trans    &kp BSPC  &kp DEL        &kp TAB      &kp ENTER  &kp CAPSLOCK  &trans
+                                  &trans     &trans     &trans    &trans    &to 2          &trans
             >;
 
             label = "NAVI";
@@ -263,10 +270,10 @@
             */
 
             bindings = <
-&kp F1     &kp F2        &kp F3        &kp F4        &kp F5        &kp F6         &kp SLASH   &kp N7        &kp N8        &kp N9        &kp MINUS   &trans
-&kp F7     &kp F8        &kp F9        &kp F10       &kp F11       &kp F12        &kp STAR    &kp N4        &kp N5        &kp N6        &kp PLUS    &trans
-&trans     &trans        &trans        &trans        &trans        &trans         &kp EQUAL   &kp N1        &kp N2        &kp N3        &kp DOT     &trans
-                                       &to 0         &trans        &trans         &trans      &trans        &kp N0
+&kp F1  &kp F2  &kp F3  &kp F4   &kp F5   &kp F6     &kp SLASH  &kp N7  &kp N8  &kp N9  &kp MINUS  &trans
+&kp F7  &kp F8  &kp F9  &kp F10  &kp F11  &kp F12    &kp STAR   &kp N4  &kp N5  &kp N6  &kp PLUS   &trans
+&trans  &trans  &trans  &trans   &trans   &trans     &kp EQUAL  &kp N1  &kp N2  &kp N3  &kp DOT    &trans
+                        &to 0    &trans   &trans     &trans     &trans  &kp N0
             >;
 
             label = "NUMBER";
@@ -285,10 +292,10 @@
             */
 
             bindings = <
-&sys_reset    &bootloader   &none           &kp C_BRI_DN        &kp C_BRI_UP        &none           &none         &none         &none           &none           &none         &none
-&bt BT_CLR    &bt BT_SEL 0  &bt BT_SEL 1    &bt BT_SEL 2        &bt BT_SEL 3        &bt BT_SEL 4    &none         &kp C_VOL_DN  &kp C_VOL_UP    &kp C_MUTE      &none         &none
-&none         &rgb_ug RGB_TOG &rgb_ug RGB_EFF &rgb_ug RGB_BRI   &rgb_ug RGB_BRD     &rgb_ug RGB_HUI &kp C_PREV    &kp C_PP      &kp C_NEXT      &none           &none         &none
-                                            &trans              &trans              &trans          &trans        &trans        &mo 5
+&sys_reset  &bootloader      &none            &kp C_BRI_DN     &kp C_BRI_UP     &none              &none       &none         &none         &none       &none  &none
+&bt BT_CLR  &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4       &none       &kp C_VOL_DN  &kp C_VOL_UP  &kp C_MUTE  &none  &none
+&none       &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &rgb_ug RGB_HUI    &kp C_PREV  &kp C_PP      &kp C_NEXT    &none       &none  &none
+                                              &trans           &trans           &trans             &trans      &trans        &mo 5
             >;
 
             label = "MEDIA";
@@ -307,10 +314,10 @@
             */
 
             bindings = <
-&sys_reset  &none         &none               &none                &none                 &none             &none           &none   &none          &none  &none  &none
-&to 0       &none         &none               &none                &none                 &none             &none           &none   &none          &none  &none  &none
-&none       &none         &none               &none                &none                 &none             &none           &none   &none          &none  &none  &none
-                                             &none                &none                 &none             &none           &none   &none
+&sys_reset  &none  &none  &none  &none  &none    &bootloader  &none  &none  &none  &none  &none
+&to 0       &none  &none  &none  &none  &none    &none        &none  &none  &none  &none  &none
+&none       &none  &none  &none  &none  &none    &none        &none  &none  &none  &none  &none
+                          &none  &none  &none    &none        &none  &none
             >;
 
             label = "ADJUST";
